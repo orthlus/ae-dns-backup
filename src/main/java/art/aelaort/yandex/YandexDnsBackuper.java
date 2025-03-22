@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static art.aelaort.S3ClientProvider.client;
-import static art.aelaort.Utils.now;
 
 @Slf4j
 @Component
@@ -24,7 +26,7 @@ public class YandexDnsBackuper implements ApplicationRunner {
 	private String bucket;
 
 	public void backupDns() {
-		String now = now();
+		String now = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
 		for (ZoneInfo zone : yandexDnsService.getZones()) {
 			String zoneRecordsString = yandexDnsService.getZoneRecordsStringByZoneId(zone.id());
 			String file = "%s/%s.json".formatted(now, zone.name());
